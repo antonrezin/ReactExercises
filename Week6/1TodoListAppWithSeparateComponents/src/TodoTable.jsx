@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 
-function TodoTable({ todos, deleteTodo }) {
+function TodoTable(props) {
   return (
     <>
-      {todos.length > 0 && (
+      {props.todos.length > 0 && (
         <table>
           <thead>
             <tr>
@@ -12,12 +12,14 @@ function TodoTable({ todos, deleteTodo }) {
             </tr>
           </thead>
           <tbody>
-            {todos.map((todo, index) => (
+            {props.todos.map((todo, index) => (
               <tr key={index}>
                 <td>{todo.desc}</td>
                 <td>{todo.date}</td>
                 <td>
-                  <button onClick={() => deleteTodo(index)}>Delete</button>
+                  <button onClick={() => props.deleteTodo(index)}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
