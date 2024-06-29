@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Front End Development / React</title>
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  </head>
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load our React component. -->
+    <script type="text/babel">
+      const CheckAge = () => {
+        const [name, setName] = React.useState("");
+        const [age, setAge] = React.useState("");
+        const [sentence, setSentence] = React.useState("");
+
+        const formSubmitted = (event) => {
+          event.preventDefault();
+          if (age >= 18) {
+            setSentence(`Hello ${name}`);
+          } else {
+            setSentence("You Are Too Young");
+          }
+        };
+
+        return (
+          <div>
+            <form onSubmit={formSubmitted}>
+              <h2>{sentence}</h2>
+              <p>
+                Name:
+                <br />
+                <input
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </p>
+              <p>
+                Age:
+                <br />
+                <input
+                  name="age"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                />
+              </p>
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(
+        <div>
+          <CheckAge />
+        </div>
+      );
+    </script>
+  </body>
+</html>

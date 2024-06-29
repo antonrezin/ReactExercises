@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Front End Development / React</title>
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  </head>
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load our React component. -->
+    <script type="text/babel">
+      const { useState } = React;
+
+      const WeatherInput = () => {
+        const [temperature, setTemperature] = useState(null);
+        const [weatherStatus, setWeatherStatus] = useState(null);
+        const [weatherIcon, setWeatherIcon] = useState(null);
+        const [weatherInput, setWeatherInput] = useState("");
+
+        const weatherData = () => {
+          const apiKey = "51ce5e31b193df0761524f8661b93955";
+          fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${weatherInput}&units=metric&appid=${apiKey}`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              setTemperature(data.main.temp);
+              setWeatherStatus(data.weather[0].main);
+              setWeatherIcon(
+                `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+              );
+            })
+            .catch((err) => console.error(err));
+        };
+
+        const inputChanged = (event) => {
+          setWeatherInput(event.target.value);
+        };
+
+        const clearWeather = () => {
+          setTemperature(null);
+          setWeatherStatus(null);
+          setWeatherIcon(null);
+          setWeatherInput("");
+        };
+
+        return (
+          <div>
+            <input
+              type="text"
+              placeholder="Enter City"
+              value={weatherInput}
+              onChange={inputChanged}
+            />
+            <button onClick={weatherData}>Get Weather</button>
+            <button onClick={clearWeather}>Clear</button>
+
+            {temperature && <h3>Temperature: {temperature} °C</h3>}
+            {weatherStatus && <h3>Weather: {weatherStatus}</h3>}
+            {weatherIcon && <img src={weatherIcon} alt={weatherStatus} />}
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(
+        <div>
+          <WeatherInput />
+        </div>
+      );
+    </script>
+  </body>
+</html>

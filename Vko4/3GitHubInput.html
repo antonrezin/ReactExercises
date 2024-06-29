@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Map example</title>
+  </head>
+
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <!-- Load our React component. -->
+    <script type="text/babel">
+      /*Add Filter Functionality in this code, that it will search, where is 'react' word*/
+
+      const { useState, useEffect } = React;
+
+      const GithubInput = () => {
+        const [githubInputList, setGithubInputList] = useState([]);
+        const [search, setSearch] = useState("");
+        const [isSearched, setIsSearched] = useState(false);
+
+        const handleSearch = () => {
+          fetch(`https://api.github.com/search/repositories?q=${search}`)
+            .then((response) => response.json())
+            .then((responseData) => {
+              setGithubInputList(responseData.items);
+              setIsSearched(true);
+            })
+            .catch((err) => console.error(err));
+        };
+
+        const handleClear = () => {
+          setGithubInputList([]);
+          setSearch("");
+          setIsSearched(false);
+        };
+
+        const githubInputRows = githubInputList.map((githubInput) => (
+          <tr key={githubInput.id}>
+            <td>{githubInput.full_name}</td>
+            <td>
+              <a href={githubInput.html_url} target="_blank">
+                {githubInput.html_url}
+              </a>
+            </td>
+          </tr>
+        ));
+
+        return (
+          <div>
+            <h1>Repositories</h1>
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <button onClick={handleSearch}>Search</button>
+            <button onClick={handleClear}>Clear</button>
+            {isSearched && (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>URL</th>
+                  </tr>
+                </thead>
+                <tbody>{githubInputRows}</tbody>
+              </table>
+            )}
+          </div>
+        );
+      };
+
+      // Create root element
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      // Initial render
+      root.render(<GithubInput />);
+    </script>
+  </body>
+</html>

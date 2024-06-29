@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Front End Development / React</title>
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  </head>
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load our React component. -->
+    <script type="text/babel">
+      const { useState } = React;
+
+      const TriviaAnswer = () => {
+        const [question, setQuestion] = useState("");
+        const [answer, setAnswer] = useState("");
+        const [showAnswer, setShowAnswer] = useState(false);
+
+        const triviaQuestions = () => {
+          fetch(
+            "https://opentdb.com/api.php?amount=1&category=15&difficulty=medium&type=multiple"
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              setQuestion(data.results[0].question);
+              setAnswer(data.results[0].correct_answer);
+              setShowAnswer(false);
+            })
+            .catch((err) => console.error(err));
+        };
+
+        const displayCorrectAnswer = () => {
+          setShowAnswer(true);
+        };
+
+        return (
+          <div>
+            <h3>{question}</h3>
+            <button onClick={triviaQuestions}>New Question</button>
+            <button onClick={displayCorrectAnswer}>Show Answer</button>
+            {showAnswer && <h3>Answer: {answer}</h3>}
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(
+        <div>
+          <TriviaAnswer />
+        </div>
+      );
+    </script>
+  </body>
+</html>

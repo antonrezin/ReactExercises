@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Map example</title>
+  </head>
+
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <!-- Load our React component. -->
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      const Avatar = () => {
+        const [avatarList, setAvatarList] = useState([]);
+
+        React.useEffect(() => {
+          fetch("https://reqres.in/api/users")
+            .then((response) => response.json())
+            .then((responseData) => {
+              setAvatarList(responseData.data);
+            })
+            .catch((err) => console.error(err));
+        }, []);
+
+        const personRows = avatarList.map((person) => (
+          <tr key={person.id}>
+            <td>{person.first_name}</td>
+            <td>{person.last_name}</td>
+            <td>{person.email}</td>
+            <td>
+              <img
+                src={person.avatar}
+                alt={`${person.first_name} ${person.last_name}`}
+              />
+            </td>
+          </tr>
+        ));
+
+        return (
+          <div>
+            <h1>Persons</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Avatar</th>
+                </tr>
+              </thead>
+              <tbody>{personRows}</tbody>
+            </table>
+          </div>
+        );
+      };
+
+      // Create root element
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      // Initial render
+      root.render(<Avatar />);
+    </script>
+  </body>
+</html>
