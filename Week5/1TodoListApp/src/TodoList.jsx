@@ -4,13 +4,11 @@ function TodoList() {
   const [todos, setTodos] = useState([]);
   const [desc, setDesc] = useState("");
   const [date, setDates] = useState("");
-  const [isSearched, setIsSearched] = useState(false);
 
   const addTodo = () => {
     setTodos([...todos, { desc, date }]);
     setDesc("");
     setDates("");
-    setIsSearched(true);
   };
 
   return (
@@ -30,7 +28,7 @@ function TodoList() {
         onChange={(event) => setDates(event.target.value)}
       />
       <button onClick={addTodo}>Add</button>
-      {isSearched && (
+      {todos.length > 0 && (
         <table>
           <thead>
             <tr>
