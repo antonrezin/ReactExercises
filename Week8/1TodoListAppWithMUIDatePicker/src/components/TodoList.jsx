@@ -61,9 +61,18 @@ function TodoList() {
     };
   }, [handleKeyDown]);
 
+  const dateFormatter = (params) => {
+    return params.value ? dayjs(params.value).format("DD.MM.YYYY") : "";
+  };
+
   const columns = [
     { field: "description", sortable: true, filter: true },
-    { field: "date", sortable: true, filter: true },
+    {
+      field: "date",
+      sortable: true,
+      filter: true,
+      valueFormatter: dateFormatter,
+    },
     { field: "priority", sortable: true, filter: true },
   ];
 
